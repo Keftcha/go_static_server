@@ -76,6 +76,6 @@ func main() {
 	http.Handle("/", serveFiles{})
 
 	// Start the server
-	fmt.Println(fmt.Sprintf("Serving the directory %s on %s:%d ", dir, host, port))
+	fmt.Println(fmt.Sprintf("Serving the directory %s on http://%s:%d ", dir, host, port))
 	log.Fatalln(http.ListenAndServe(fmt.Sprintf("%s:%d", host, port), nil))
 }

@@ -1,16 +1,16 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 	"time"
 )
 
 var host string = "0.0.0.0"
-var port int64 = 8080
+var port int = 8080
 var dir string = "./"
 
 type seekable []string
@@ -44,29 +44,22 @@ func (h serveFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func init() {
-	args := os.Args[1:]
-
 	// Check is the user gave the address os set a default one
-	if _, idx, okHost := seekable(args).contain("--host"); okHost {
-		host = args[idx+1]
-	}
+	flag.StringVar(&host, "host", "0.0.0.0", "The host where the server listen")
 
 	// Check if the user gave the port or set a default port
-	if _, idx, okPort := seekable(args).contain("--port"); okPort { // && (_, idx, okP := seekable(args).contain("-p"); okPort && okP) {
-		givenPort, err := strconv.ParseInt(args[idx+1], 10, 16)
-		if err != nil {
-			panic(err)
-		}
-		port = givenPort
-	}
+	flag.IntVar(&port, "port", 8080, "The port chere ther server listen")
+	flag.IntVar(&port, "p", 8080, "The port chere ther server listen")
 
-	// Check is the user gave a folder to serve and check if the directory exist
-	if _, idx, okDir := seekable(args).contain("--dir"); okDir { // && _, idx, okD := seekable(args).contain("-d") {
-		givenDir := args[idx+1]
-		if _, err := os.Stat(givenDir); err != nil {
-			panic(err)
-		}
-		dir = givenDir
+	// Check is the user gave a directory to serve
+	flag.StringVar(&dir, "dir", "./", "The directory to serve")
+	flag.StringVar(&dir, "d", "./", "The directory to serve")
+
+	flag.Parse()
+
+	// Check if the given directory to serve exist
+	if _, err := os.Stat(dir); err != nil {
+		panic(err)
 	}
 }
 

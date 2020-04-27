@@ -16,21 +16,6 @@ var dir string = "./"
 type seekable []string
 type serveFiles struct{}
 
-func (slice seekable) contain(toFind string) (string, int, bool) {
-	// Given a slice and a thing to find in that slice
-	// we return:
-	//    - the value of the finded element
-	//    - the index of the finded element
-	//    - a boolean to know if the value is present
-
-	for idx, elem := range slice {
-		if elem == toFind {
-			return elem, idx, true
-		}
-	}
-	return "", 0, false
-}
-
 func (h serveFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(
 		fmt.Sprintf(

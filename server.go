@@ -13,10 +13,7 @@ var host string = "0.0.0.0"
 var port int = 8080
 var dir string = "./"
 
-type seekable []string
-type serveFiles struct{}
-
-func (h serveFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func serveFiles(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(
 		fmt.Sprintf(
 			"%s - %s %s",
@@ -51,7 +48,7 @@ func init() {
 func main() {
 
 	// Serve all as static file
-	http.Handle("/", serveFiles{})
+	http.HandleFunc("/", serveFiles)
 
 	// Start the server
 	fmt.Println(fmt.Sprintf("Serving the directory %s on http://%s:%d ", dir, host, port))

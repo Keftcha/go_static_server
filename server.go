@@ -14,6 +14,10 @@ var port int = 8080
 var dir string = "./"
 
 func serveFiles(w http.ResponseWriter, r *http.Request) {
+	// Allow CORS request
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	// Log the request
 	fmt.Println(
 		fmt.Sprintf(
 			"%s - %s %s",
@@ -22,6 +26,8 @@ func serveFiles(w http.ResponseWriter, r *http.Request) {
 			r.URL,
 		),
 	)
+
+	// Serve the content
 	http.FileServer(http.Dir(dir)).ServeHTTP(w, r)
 }
 

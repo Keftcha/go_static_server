@@ -12,7 +12,7 @@ import (
 var host string = "0.0.0.0"
 var port int = 8080
 var dir string = "./"
-var baseUrl string = "/"
+var baseURL string = "/"
 
 func serveFiles(w http.ResponseWriter, r *http.Request) {
 	// Allow CORS request
@@ -30,7 +30,7 @@ func serveFiles(w http.ResponseWriter, r *http.Request) {
 
 	// Remove base url and serve the content
 	http.StripPrefix(
-		baseUrl,
+		baseURL,
 		http.FileServer(http.Dir(dir)),
 	).ServeHTTP(w, r)
 }
@@ -48,7 +48,7 @@ func init() {
 	flag.StringVar(&dir, "d", "./", "The directory to serve")
 
 	// Check if the user have a base url to strip
-	flag.StringVar(&baseUrl, "base-url", "/", "The base url")
+	flag.StringVar(&baseURL, "base-url", "/", "The base url")
 
 	flag.Parse()
 
@@ -63,6 +63,6 @@ func main() {
 	http.HandleFunc("/", serveFiles)
 
 	// Start the server
-	fmt.Println(fmt.Sprintf("Serving the directory %s on http://%s:%d ", dir, host, port))
+	fmt.Println(fmt.Sprintf("Serving the directory %s on http://%s:%d%s ", dir, host, port, baseURL))
 	log.Fatalln(http.ListenAndServe(fmt.Sprintf("%s:%d", host, port), nil))
 }

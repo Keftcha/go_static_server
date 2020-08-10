@@ -40,8 +40,8 @@ func init() {
 	flag.StringVar(&host, "host", "0.0.0.0", "The host where the server listen")
 
 	// Check if the user gave the port or set a default port
-	flag.IntVar(&port, "port", 8080, "The port chere ther server listen")
-	flag.IntVar(&port, "p", 8080, "The port chere ther server listen")
+	flag.IntVar(&port, "port", 8080, "The port where ther server listen")
+	flag.IntVar(&port, "p", 8080, "The port where ther server listen")
 
 	// Check is the user gave a directory to serve
 	flag.StringVar(&dir, "dir", "./", "The directory to serve")

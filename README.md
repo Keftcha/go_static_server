@@ -14,3 +14,4 @@ Little web static server to serve static files.
 - `--host` flag define the host address the server listen (default is "0.0.0.0")
 - `--port` or `-p` flag define the listen port number (default is 8080)
 - `--dir` or `-d` flag define the directory to serve (default is the current directory aka. "./")
+- `--base-url` flag define the base url of the server (default is "/").

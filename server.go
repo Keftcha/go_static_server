@@ -21,8 +21,9 @@ func serveFiles(w http.ResponseWriter, r *http.Request) {
 	// Log the request
 	fmt.Println(
 		fmt.Sprintf(
-			"%s - %s %s",
+			"%s - %s - %s %s",
 			time.Now().Format("[2006-01-02 15:04:05]"),
+			r.RemoteAddr,
 			r.Host,
 			r.URL,
 		),

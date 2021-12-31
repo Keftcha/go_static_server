@@ -1,11 +1,14 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 )
 
@@ -13,29 +16,6 @@ var host string = "0.0.0.0"
 var port int = 8080
 var dir string = "./"
 var baseURL string = "/"
-
-func serveFiles(w http.ResponseWriter, r *http.Request) {
-	// Allow CORS request
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-
-	// Log the request
-	fmt.Println(
-		fmt.Sprintf(
-			"%s - %s - %s %s %s",
-			time.Now().Format("[2006-01-02 15:04:05]"),
-			r.RemoteAddr,
-			r.Host,
-			r.Method,
-			r.URL,
-		),
-	)
-
-	// Remove base url and serve the content
-	http.StripPrefix(
-		baseURL,
-		http.FileServer(http.Dir(dir)),
-	).ServeHTTP(w, r)
-}
 
 func init() {
 	// Check is the user gave the address os set a default one
@@ -61,10 +41,49 @@ func init() {
 }
 
 func main() {
-	// Serve all as static file
-	http.HandleFunc("/", serveFiles)
+	// Create the server
+	srv := http.Server{
+		Addr:    fmt.Sprintf("%s:%d", host, port),
+		Handler: http.HandlerFunc(serveFiles),
+	}
+
+	// Gracefully shutdown the server on SIGINT or SIGTERM
+	sc := make(chan os.Signal, 1)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+	go func() {
+		<-sc
+		if err := srv.Shutdown(context.Background()); err != nil {
+			log.Fatalln(err)
+		}
+	}()
 
 	// Start the server
 	fmt.Println(fmt.Sprintf("Serving the directory %s on http://%s:%d%s ", dir, host, port, baseURL))
-	log.Fatalln(http.ListenAndServe(fmt.Sprintf("%s:%d", host, port), nil))
+	// Ignore the ErrServerClosed because we may have close it
+	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+		log.Fatal(err)
+	}
+}
+
+func serveFiles(w http.ResponseWriter, r *http.Request) {
+	// Allow CORS request
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	// Log the request
+	fmt.Println(
+		fmt.Sprintf(
+			"%s - %s - %s %s %s",
+			time.Now().Format("[2006-01-02 15:04:05]"),
+			r.RemoteAddr,
+			r.Host,
+			r.Method,
+			r.URL,
+		),
+	)
+
+	// Remove base url and serve the content
+	http.StripPrefix(
+		baseURL,
+		http.FileServer(http.Dir(dir)),
+	).ServeHTTP(w, r)
 }

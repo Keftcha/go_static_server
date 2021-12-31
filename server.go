@@ -9,7 +9,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 )
 
 var host string = "0.0.0.0"
@@ -58,7 +57,7 @@ func main() {
 	}()
 
 	// Start the server
-	fmt.Println(fmt.Sprintf("Serving the directory %s on http://%s:%d%s ", dir, host, port, baseURL))
+	log.Println(fmt.Sprintf("Serving the directory %s on http://%s:%d%s ", dir, host, port, baseURL))
 	// Ignore the ErrServerClosed because we may have close it
 	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
 		log.Fatal(err)
@@ -70,10 +69,9 @@ func serveFiles(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	// Log the request
-	fmt.Println(
+	log.Println(
 		fmt.Sprintf(
-			"%s - %s - %s %s %s",
-			time.Now().Format("[2006-01-02 15:04:05]"),
+			"%s - %s %s %s",
 			r.RemoteAddr,
 			r.Host,
 			r.Method,

@@ -6,8 +6,8 @@ Little web static server to serve static files.
 
 ### Compile the gss
 
-1. Download, clone or `go get` this project
-2. Compile it with `go install` or `go build` (not needed if you use `go get`)
+1. Download or clone this project
+2. Compile it with `go install` or `go build`
 3. Start the server
 
 ### Compile the gss inside docker

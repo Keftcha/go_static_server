@@ -7,17 +7,10 @@ Little web static server to serve static files.
 ### Compile the gss
 
 1. Download or clone this project
-2. Compile it with `go install` or `go build`
-3. Start the server
-
-### Compile the gss inside docker
-
-If you don't have go installed (and you don't want to install it), you can
-build the gss inside a docker container.
-
-1. Download or clone this project
-2. Compile inside a docker container with the command:  
-`docker run -v "$PWD":/go/src/gss -w /go/src/gss golang go build`
+2. Compile it:
+    - With `make build` to get a bianry named `gss`.
+    - With `make install` to install the executable in the `$GOBIN` directory
+    - With `make-in-ctn` to build it in a container and get a binary named `gss`
 3. Start the server
 
 ## Command Line options
